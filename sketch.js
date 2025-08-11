@@ -5,7 +5,7 @@ let fundo = 255;            // Cor de fundo (branco)
 
 function setup() {
   // Configuração inicial do sketch
-  createCanvas(windowWidth, windowHeight);  // Cria canvas do tamanho da janela
+  createCanvas(windowWidth * 5, windowHeight* 5);  // Cria canvas do tamanho da janela
   background(fundo);         // Pinta o fundo de branco
   stroke(cor);               // Define cor inicial do traço (preto)
   strokeWeight(pesoTraco);   // Define espessura inicial do traço
