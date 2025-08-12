@@ -10,6 +10,11 @@ let fundoPontilhado; // Imagem de fundo com padrão pontilhado
 let posAnterior = null; // Posição anterior do dedo
 let posAtual = null; // Posição atual do dedo
 
+// Variáveis para controle da mão aberta
+let modoMaoAberta = false;
+let corAnterior;
+let pesoAnterior;
+
 // Interface para MediaPipe Landmark Tracking
 let myHandLandmarker; // Detector de landmarks das mãos
 let myPoseLandmarker; // Detector de landmarks do corpo
@@ -101,14 +106,52 @@ function draw() {
     alterarCor(); // Aplica nova cor
     ultimoTempo = agora; // Atualiza registro de tempo
   }
-  
-  // Desenha com o dedo se detectado
+
+  // Verifica detecção de mãos
   if (trackingConfig.doAcquireHandLandmarks && 
       handLandmarks && 
       handLandmarks.landmarks &&
       handLandmarks.landmarks.length > 0) {
     
     let joints = handLandmarks.landmarks[0]; // Pontos da primeira mão detectada
+    
+    // Detecção de mão aberta usando distância pulso-dedos
+    if (joints.length >= 21 && joints[0] && joints[9] && joints[12]) {
+      // Calcula distância pulso-base dos dedos
+      let dx = joints[0].x - joints[9].x;
+      let dy = joints[0].y - joints[9].y;
+      let distBase = Math.sqrt(dx*dx + dy*dy);
+      
+      // Calcula distância pulso-ponta do dedo médio
+      dx = joints[0].x - joints[12].x;
+      dy = joints[0].y - joints[12].y;
+      let distPonta = Math.sqrt(dx*dx + dy*dy);
+      
+      // Razão que indica mão aberta (ponta longe do pulso)
+      let razao = distPonta / distBase;
+      
+      // Verifica se a mão está aberta (razão > 1.5)
+      if (razao > 1.5) {
+        if (!modoMaoAberta) {
+          // Salva estado atual antes de mudar para borracha
+          corAnterior = corAtual;
+          pesoAnterior = pesoTraco;
+          modoMaoAberta = true;
+        }
+        // Configura como borracha grande
+        corAtual = [fundo, fundo, fundo];
+        pesoTraco = 100;
+      } else {
+        if (modoMaoAberta) {
+          // Restaura estado anterior
+          corAtual = corAnterior;
+          pesoTraco = pesoAnterior;
+          modoMaoAberta = false;
+        }
+      }
+    }
+    
+    // Continua com o desenho usando o dedo indicador
     if (joints[8]) { // Ponto da ponta do dedo indicador (landmark 8)
       // Converte coordenadas normalizadas para pixels (espelha horizontalmente)
       let x = width - (joints[8].x * width);
@@ -134,12 +177,20 @@ function draw() {
     }
   } else {
     posAnterior = null; // Reseta se nenhuma mão detectada
+    // Se sair da detecção e estava em modo mão aberta, restaura
+    if (modoMaoAberta) {
+      corAtual = corAnterior;
+      pesoTraco = pesoAnterior;
+      modoMaoAberta = false;
+    }
   }
 }
 
 // Função para atualizar a cor atual do pincel
 function alterarCor() {
-  corAtual = cores[indice]; // Seleciona cor do array
+  if (!modoMaoAberta) { // Só troca cor se não estiver em modo mão aberta
+    corAtual = cores[indice]; // Seleciona cor do array
+  }
 }
 
 //------------------------------------------
