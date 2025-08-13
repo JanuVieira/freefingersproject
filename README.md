@@ -20,7 +20,3 @@ ml5.js para detectar a palma da mão e rastrear os dedos via câmera, direto no 
 
 Sem instalar nada complicado: basta abrir o link e começar a desenhar.
 
-🚀 Teste agora
-
-Abra no seu navegador e brinque:
-🔗 Free Fingers Project
