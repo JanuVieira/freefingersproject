@@ -1,7 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
 body {
-  
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  height: 100vh;
 }
 
-.menu {
- 
+canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.logo {
+  position: absolute; 
+  top: 2rem; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  z-index: 1000;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.by {
+  font-weight: 300;
+  font-size: 0.9rem;
+}
+
+.myname a {
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #585858;
+}
+
+.author {
+  position: absolute; 
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  bottom: 1.5rem; 
+  left: 2rem; 
+  z-index: 1000;
+}
+
+.myicon svg path {
+  fill: #585858;
+}
+
+.author:hover .myicon svg path {
+  fill: #5046c7;
+  transition: fill 0.3s ease;
+}
+
+.author:hover .myname a {
+  text-decoration: underline;
+  cursor: pointer;
 }
